@@ -132,11 +132,11 @@ function App() {
         <section id="contact" className="section contact container">
           <div className="section-head"><span>04 / CONTACT</span><h2>Let's build<br/><em>something.</em></h2></div>
           <div className="contact-box">
-            <div><p>Have a project, opportunity or idea?</p><a className="email" href="mailto:your.email@example.com">your.email@example.com <ArrowUpRight size={22}/></a></div>
+            <div><p>Have a project, opportunity or idea?</p><a className="email" href="mailto:premtandanpt@gmail.com">premtandanpt@gmail.com <ArrowUpRight size={22}/></a></div>
             <div className="socials">
               <a href="#" aria-label="GitHub">GH</a>
               <a href="#" aria-label="LinkedIn">in</a>
-              <a href="mailto:your.email@example.com" aria-label="Email">
+              <a href="mailto:premtadnanpt@gmail.COM" aria-label="Email">
                 <Mail/>
               </a>
             </div>
