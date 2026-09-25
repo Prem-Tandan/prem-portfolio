@@ -15,25 +15,41 @@ const skills = [
 const projects = [
   {
     number: "01",
-    title: "School ERP",
-    tag: "Full Stack Web App",
-    description: "A complete school management platform designed to bring students, teachers, attendance, fees, exams and administration into one system.",
-    tech: ["React", "Node.js", "SQL"],
-    featured: true,
+    title: "EduSphera",
+    tag: "Education Platform",
+    description:
+      "An educational platform designed to make learning more accessible, practical and engaging.",
+    tech: ["HTML", "JavaScript", "Education"],
+    url: "https://indexhtml-two-weld.vercel.app",
   },
+
   {
     number: "02",
-    title: "Coming Soon",
-    tag: "Next Project",
-    description: "A new practical project is currently being designed and built. Check back soon for the live case study.",
-    tech: ["React", "API", "UI/UX"],
+    title: "Rapid Type",
+    tag: "Typing Application",
+    description:
+      "A typing practice application designed to help users improve their typing speed and accuracy.",
+    tech: ["React", "JavaScript", "Web App"],
+    url: "https://rapid-type-tau.vercel.app",
   },
+
   {
     number: "03",
-    title: "AI + Education",
-    tag: "Research Project",
-    description: "Exploring practical applications of machine learning in education with a focus on useful, real-world outcomes.",
-    tech: ["Python", "ML", "Research"],
+    title: "DT Thought Task",
+    tag: "Frontend Assignment",
+    description:
+      "A frontend project created from a Figma design and converted into a responsive HTML and CSS interface.",
+    tech: ["HTML", "CSS", "JavaScript"],
+    url: "https://prem-tandan.github.io/DT-thought-task-1/",
+  },
+
+  {
+    number: "04",
+    title: "Coming Soon",
+    tag: "Next Project",
+    description:
+      "A new practical project is currently being designed and built. Check back soon for the live case study.",
+    tech: ["React", "API", "UI/UX"],
   },
 ];
 
@@ -117,7 +133,15 @@ function App() {
             {projects.map(p => <article className={`project ${p.featured ? "featured":""}`} key={p.number}>
               <div className="project-number">{p.number}</div>
               <div className="project-info"><span className="tag">{p.tag}</span><h3>{p.title}</h3><p>{p.description}</p><div className="chips">{p.tech.map(t=><span key={t}>{t}</span>)}</div></div>
-              <button className="project-arrow" aria-label="Open project"><ArrowUpRight/></button>
+              <a
+                className="project-arrow"
+                href={p.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label={`Open ${p.title}`}
+              >
+                <ArrowUpRight />
+              </a>
             </article>)}
           </div>
         </section>

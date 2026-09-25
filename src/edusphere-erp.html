@@ -1,0 +1,1240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>EduSphere — School ERP</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Caveat:wght@600&display=swap" rel="stylesheet">
+<style>
+:root{
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+  --bg:#eef4fd;
+  --surface:#ffffff;
+  --surface-2:#f7fafe;
+  --sidebar:#0f2547;
+  --sidebar-2:#16315a;
+  --sidebar-text:#c6d6ee;
+  --border:#e3eaf4;
+  --border-strong:#d3deee;
+  --text:#132540;
+  --muted:#65788f;
+  --primary:#1d6ff2;
+  --primary-dark:#1558c9;
+  --primary-soft:#e6efff;
+  --green:#16a34a;
+  --green-soft:#e3f7ea;
+  --red:#e0342c;
+  --red-soft:#fde8e7;
+  --amber:#e08b00;
+  --amber-soft:#fdf0d9;
+  --purple:#7c4dea;
+  --purple-soft:#eee7fd;
+  --shadow:0 1px 2px rgba(19,37,64,.06), 0 8px 24px -14px rgba(19,37,64,.28);
+  --radius:14px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0b1626; --surface:#111f34; --surface-2:#16263e; --sidebar:#08111f; --sidebar-2:#122544;
+    --sidebar-text:#9fb4d2; --border:#1e3250; --border-strong:#284066; --text:#e6eefb; --muted:#93a8c4;
+    --primary:#4d92ff; --primary-dark:#3b7ce8; --primary-soft:#16294a; --green:#3ddc84; --green-soft:#12321f;
+    --red:#ff6b62; --red-soft:#3a1715; --amber:#ffb028; --amber-soft:#3a2a0c; --purple:#a684ff; --purple-soft:#241a3f;
+    --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -16px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0b1626; --surface:#111f34; --surface-2:#16263e; --sidebar:#08111f; --sidebar-2:#122544;
+  --sidebar-text:#9fb4d2; --border:#1e3250; --border-strong:#284066; --text:#e6eefb; --muted:#93a8c4;
+  --primary:#4d92ff; --primary-dark:#3b7ce8; --primary-soft:#16294a; --green:#3ddc84; --green-soft:#12321f;
+  --red:#ff6b62; --red-soft:#3a1715; --amber:#ffb028; --amber-soft:#3a2a0c; --purple:#a684ff; --purple-soft:#241a3f;
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 10px 28px -16px rgba(0,0,0,.7);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:none;background:none}
+a{color:var(--primary)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+.app{display:flex;min-height:100dvh}
+.sidebar{width:238px;flex:0 0 238px;background:var(--sidebar);color:var(--sidebar-text);display:flex;flex-direction:column;position:sticky;top:0;height:100dvh;z-index:60}
+.brand{display:flex;align-items:center;gap:10px;padding:20px 18px 16px}
+.brand-mark{width:34px;height:34px;border-radius:9px;background:linear-gradient(140deg,#2f8bff,#1450c4);display:grid;place-items:center;flex:0 0 auto;color:#fff}
+.brand-name{color:#fff;font-weight:800;font-size:17px;letter-spacing:-.02em;line-height:1.1;display:block}
+.brand-sub{font-size:9.5px;letter-spacing:.18em;color:#80a2d8;font-weight:600;display:block}
+.nav{padding:6px 12px;display:flex;flex-direction:column;gap:2px;overflow-y:auto;flex:1}
+.nav-item{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:9px;color:var(--sidebar-text);font-weight:600;font-size:13.5px;width:100%;text-align:left;transition:background .12s,color .12s}
+.nav-item:hover{background:var(--sidebar-2);color:#fff}
+.nav-item.active{background:var(--primary);color:#fff;box-shadow:0 6px 16px -8px rgba(29,111,242,.9)}
+.nav-foot{padding:14px 18px 18px;font-size:11.5px;color:#7794c0;border-top:1px solid rgba(255,255,255,.07)}
+.tagline{font-family:"Caveat",cursive;font-size:19px;color:#9dbdee;line-height:1.1}
+
+.main{flex:1;min-width:0;display:flex;flex-direction:column}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;padding:12px 22px}
+.icon-btn{width:38px;height:38px;border-radius:10px;display:grid;place-items:center;color:var(--muted);position:relative}
+.icon-btn:hover{background:var(--surface-2);color:var(--text)}
+.search{flex:1;max-width:420px;position:relative}
+.search input{width:100%;padding:10px 14px 10px 38px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:13.5px}
+.search>svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.search-pop{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--surface);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden;z-index:50}
+.search-row{display:block;padding:9px 13px;width:100%;text-align:left}
+.search-row:hover{background:var(--surface-2)}
+.badge-dot{position:absolute;top:4px;right:4px;min-width:16px;height:16px;padding:0 4px;border-radius:9px;background:var(--red);color:#fff;font-size:10px;font-weight:700;display:grid;place-items:center}
+.who{display:flex;align-items:center;gap:9px;padding:5px 8px;border-radius:10px}
+.who:hover{background:var(--surface-2)}
+.who-name{font-weight:700;font-size:13.5px;line-height:1.2}
+.who-role{font-size:11.5px;color:var(--muted)}
+.content{padding:22px;display:flex;flex-direction:column;gap:18px;flex:1}
+.avatar{border-radius:50%;display:grid;place-items:center;font-weight:700;color:#fff;flex:0 0 auto}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}
+.card-head{display:flex;align-items:center;gap:12px;padding:15px 18px;border-bottom:1px solid var(--border)}
+.card-title{font-size:15.5px;font-weight:700;letter-spacing:-.01em}
+.card-body{padding:16px 18px}
+.link{font-size:12.5px;font-weight:700;color:var(--primary);margin-left:auto}
+
+.hello{display:flex;flex-wrap:wrap;align-items:flex-start;gap:18px;justify-content:space-between}
+.hello h1{margin:0;font-size:26px;letter-spacing:-.03em;font-weight:800}
+.hello p{margin:3px 0 0;color:var(--muted)}
+.quote{max-width:310px;font-size:12.5px;color:var(--muted);text-align:right;line-height:1.55}
+.date-pill{font-weight:700;font-size:13px;display:block;margin-bottom:6px;text-align:right}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.stat{display:flex;gap:13px;align-items:center;padding:16px 17px}
+.stat-ico{width:46px;height:46px;border-radius:13px;display:grid;place-items:center;flex:0 0 auto}
+.stat-label{font-size:12.5px;color:var(--muted);font-weight:600}
+.stat-value{font-size:25px;font-weight:800;letter-spacing:-.03em;line-height:1.15}
+.stat-note{font-size:11.5px;font-weight:700}
+
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-dash{display:grid;grid-template-columns:1.1fr 1.1fr .82fr;gap:16px}
+.grid-dash-b{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+
+select.mini,input.mini{padding:7px 11px;border-radius:9px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:12.5px;font-weight:600}
+.legend{display:flex;gap:14px;justify-content:center;font-size:12px;color:var(--muted);font-weight:600;margin-bottom:6px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:5px}
+
+.quick{display:flex;align-items:center;gap:11px;padding:11px 12px;border:1px solid var(--border);border-radius:11px;width:100%;text-align:left;font-weight:700;font-size:13.5px;background:var(--surface);transition:border-color .12s,transform .12s}
+.quick:hover{border-color:var(--primary);transform:translateX(2px)}
+.quick .qi{width:32px;height:32px;border-radius:9px;display:grid;place-items:center;flex:0 0 auto}
+
+table{width:100%;border-collapse:collapse}
+th{text-align:left;font-size:11.5px;color:var(--muted);font-weight:700;padding:9px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+tbody tr:last-child td{border-bottom:none}
+tbody tr:hover{background:var(--surface-2)}
+.table-wrap{overflow-x:auto}
+
+.pill{display:inline-block;padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;text-transform:capitalize}
+.pill.green{background:var(--green-soft);color:var(--green)}
+.pill.red{background:var(--red-soft);color:var(--red)}
+.pill.amber{background:var(--amber-soft);color:var(--amber)}
+.pill.blue{background:var(--primary-soft);color:var(--primary)}
+.pill.purple{background:var(--purple-soft);color:var(--purple)}
+
+.event{display:flex;gap:11px;align-items:center;padding:9px 0;border-bottom:1px solid var(--border)}
+.event:last-child{border-bottom:none}
+.event .d{width:46px;flex:0 0 auto;border-radius:10px;text-align:center;padding:5px 0;font-weight:800;line-height:1.1}
+.event .d small{display:block;font-size:9.5px;letter-spacing:.06em;font-weight:700;opacity:.85}
+.event .t{font-weight:700;font-size:13px}
+.event .s{font-size:11.5px;color:var(--muted)}
+
+.btn{display:inline-flex;align-items:center;gap:7px;padding:9px 15px;border-radius:10px;font-weight:700;font-size:13px;background:var(--primary);color:#fff;transition:background .12s;text-decoration:none}
+.btn:hover{background:var(--primary-dark)}
+.btn.ghost{background:var(--surface-2);color:var(--text);border:1px solid var(--border-strong)}
+.btn.ghost:hover{background:var(--border)}
+.btn.green{background:var(--green);color:#fff}
+.btn.danger{background:var(--red);color:#fff}
+.btn.sm{padding:6px 11px;font-size:12px}
+.row-act{display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;color:var(--muted)}
+.row-act:hover{background:var(--primary-soft);color:var(--primary)}
+.row-act.del:hover{background:var(--red-soft);color:var(--red)}
+
+.page-head{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+.page-head h2{margin:0;font-size:21px;font-weight:800;letter-spacing:-.025em}
+.page-head .sub{color:var(--muted);font-size:13px}
+.toolbar{display:flex;flex-wrap:wrap;gap:9px;align-items:center;padding:13px 18px;border-bottom:1px solid var(--border)}
+.field{display:flex;flex-direction:column;gap:5px}
+.field label{font-size:12px;font-weight:700;color:var(--muted)}
+.field input,.field select{padding:9px 11px;border-radius:10px;border:1px solid var(--border-strong);background:var(--surface-2);font-size:13.5px;width:100%}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+
+.seg{display:inline-flex;border:1px solid var(--border-strong);border-radius:9px;overflow:hidden}
+.seg button{padding:5px 11px;font-size:12px;font-weight:700;color:var(--muted);background:var(--surface)}
+.seg button+button{border-left:1px solid var(--border-strong)}
+.seg button.on[data-v="present"]{background:var(--green);color:#fff}
+.seg button.on[data-v="absent"]{background:var(--red);color:#fff}
+.seg button.on[data-v="leave"]{background:var(--amber);color:#fff}
+
+.mask{position:fixed;inset:0;background:rgba(10,22,40,.5);display:grid;place-items:center;padding:20px;z-index:100}
+.modal{background:var(--surface);border-radius:16px;width:min(560px,100%);max-height:86dvh;overflow:auto;box-shadow:0 30px 60px -20px rgba(0,0,0,.5);animation:pop .16s ease-out}
+@keyframes pop{from{transform:translateY(8px);opacity:0}to{transform:none;opacity:1}}
+.modal h3{margin:0;font-size:17px;font-weight:800}
+
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(22px + env(safe-area-inset-bottom,0px));background:var(--sidebar);color:#fff;padding:11px 18px;border-radius:999px;font-weight:700;font-size:13px;z-index:200;box-shadow:0 14px 30px -12px rgba(0,0,0,.6)}
+
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px}
+.tile{padding:16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow)}
+.tile h4{margin:0 0 3px;font-size:17px;font-weight:800;letter-spacing:-.02em}
+.bar-track{height:7px;border-radius:99px;background:var(--border);overflow:hidden;margin-top:8px}
+.bar-fill{height:100%;border-radius:99px;background:var(--primary)}
+.empty{padding:40px 18px;text-align:center;color:var(--muted)}
+.empty b{display:block;color:var(--text);font-size:15px;margin-bottom:4px}
+.scrim{display:none}
+.mobile-only{display:none}
+
+@media (max-width:1180px){.grid-dash,.grid-dash-b{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+@media (max-width:860px){
+  .sidebar{position:fixed;left:0;top:0;height:100dvh;transform:translateX(-100%);transition:transform .2s ease}
+  .sidebar.open{transform:none}
+  .scrim{display:block;position:fixed;inset:0;background:rgba(10,22,40,.5);z-index:55}
+  .mobile-only{display:grid}
+  .content{padding:15px}
+  .topbar{padding:10px 14px}
+  .grid-2{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .quote{display:none}
+  .hello h1{font-size:22px}
+}
+@media (max-width:520px){.stats{grid-template-columns:1fr}.who-text{display:none}}
+@media print{.sidebar,.topbar,.no-print{display:none!important}body{background:#fff}.card{box-shadow:none;break-inside:avoid}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const {useState, useEffect, useMemo} = React;
+
+const I = ({d, size=18}) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth="1.9" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+    {d.map((p,i)=><path key={i} d={p} />)}
+  </svg>
+);
+const ic = {
+  dash:["M3 10.5 12 3l9 7.5","M5 9.5V21h14V9.5","M9.5 21v-6h5v6"],
+  students:["M8 11a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z","M2.5 20c0-3.3 2.5-5.5 5.5-5.5s5.5 2.2 5.5 5.5","M16 11.5a2.8 2.8 0 1 0 0-5.6","M15.5 14.8c3 .2 5 2.3 5 5.2"],
+  attendance:["M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Z","M12 7v5l3 2"],
+  grade:["M4 4h13a3 3 0 0 1 3 3v13H7a3 3 0 0 1-3-3V4Z","M4 17a3 3 0 0 1 3-3h13","M8 8h7"],
+  classes:["M4 5.5h6.5a2 2 0 0 1 2 2V20a2.2 2.2 0 0 0-2-1.5H4v-13Z","M21 5.5h-6.5a2 2 0 0 0-2 2V20a2.2 2.2 0 0 1 2-1.5H21v-13Z"],
+  teachers:["M12 10.2a3.1 3.1 0 1 0 0-6.2 3.1 3.1 0 0 0 0 6.2Z","M5 20.5c0-3.7 3.1-6.5 7-6.5s7 2.8 7 6.5"],
+  parents:["M9 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z","M2.5 20c0-3.3 2.9-5.6 6.5-5.6s6.5 2.3 6.5 5.6","M17 4.5a3 3 0 0 1 0 6","M18 14.4c2.1.6 3.5 2.3 3.5 4.6"],
+  exams:["M7 3h7l5 5v13H7a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1Z","M14 3v5h5","M9.5 13.5l1.8 1.8 3.4-3.4"],
+  reports:["M4 20V10","M10 20V4","M16 20v-7","M22 20H2"],
+  settings:["M12 15.2a3.2 3.2 0 1 0 0-6.4 3.2 3.2 0 0 0 0 6.4Z","M19.4 15a7.9 7.9 0 0 0 .1-1 7.9 7.9 0 0 0-.1-1l2-1.5-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1L14.9 2h-3.8l-.4 2.6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 9.5a8.3 8.3 0 0 0 0 2L4.6 13l2 3.4 2.4-1c.5.4 1.1.8 1.7 1l.4 2.6h3.8l.4-2.6c.6-.2 1.2-.6 1.7-1l2.4 1 2-3.4-2-1.5Z"],
+  search:["M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14Z","M20.5 20.5 16.2 16.2"],
+  bell:["M18 8.5a6 6 0 1 0-12 0c0 6-2.5 7.5-2.5 7.5h17S18 14.5 18 8.5Z","M13.7 19.5a2 2 0 0 1-3.4 0"],
+  menu:["M4 7h16","M4 12h16","M4 17h16"],
+  plus:["M12 5v14","M5 12h14"],
+  check:["M20 6 9 17l-5-5"],
+  edit:["M12 20h9","M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4Z"],
+  trash:["M3 6h18","M8 6V4h8v2","M19 6l-1 14H6L5 6","M10 11v5","M14 11v5"],
+  save:["M5 3h11l3 3v15H5V3Z","M8 3v6h7V3","M8 17h8"],
+  close:["M6 6l12 12","M18 6 6 18"],
+  print:["M6 9V3h12v6","M6 18H4v-6h16v6h-2","M8 14h8v7H8v-7Z"],
+  up:["M12 19V5","M6 11l6-6 6 6"],
+  moon:["M21 13.5A8.5 8.5 0 1 1 10.5 3a7 7 0 0 0 10.5 10.5Z"],
+  sun:["M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10Z","M12 2v2","M12 20v2","M4.2 4.2l1.5 1.5","M18.3 18.3l1.5 1.5","M2 12h2","M20 12h2","M4.2 19.8l1.5-1.5","M18.3 5.7l1.5-1.5"],
+  logo:["M12 3 3 7.5 12 12l9-4.5L12 3Z","M6 10v5.5c0 1.7 2.7 3 6 3s6-1.3 6-3V10"]
+};
+
+const CLASSES = ["6-A","7-A","8-A","9-B","10-A","10-B"];
+const SUBJECTS = ["Mathematics","Science","English","Social Science","Hindi"];
+const FIRST = ["Aarav","Saanvi","Rohan","Kavya","Aditya","Ananya","Dev","Isha","Kabir","Meera","Arjun","Diya","Vivaan","Riya","Ishaan","Anika","Reyansh","Myra","Atharv","Aadhya","Krish","Tara","Neel","Sara","Yash","Nisha","Om","Pari","Rudra","Zoya","Laksh","Avni","Veer","Ira","Arnav","Kiara"];
+const LAST = ["Sharma","Patel","Verma","Singh","Kumar","Khan","Joshi","Mehta","Reddy","Nair","Gupta","Desai","Iyer","Chopra","Bose","Rao"];
+const AV = ["#1d6ff2","#16a34a","#e08b00","#7c4dea","#e0342c","#0891b2","#db2777","#4d7c0f"];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const DAY = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+const iso = d => d.toISOString().slice(0,10);
+const today = () => iso(new Date());
+const addDays = (d,n) => { const x=new Date(d); x.setDate(x.getDate()+n); return x; };
+const fullName = s => s.first+" "+s.last;
+const initials = s => s.first ? (s.first[0]+s.last[0]) : s.name.split(" ").map(w=>w[0]).slice(0,2).join("");
+const fmtDate = d => { const x=new Date(d+"T00:00:00"); return DAY[x.getDay()]+", "+x.getDate()+" "+MON[x.getMonth()]+" "+x.getFullYear(); };
+const gradeOf = t => t>=90?"A+":t>=80?"A":t>=70?"B+":t>=60?"B":t>=50?"C":t>=40?"D":"F";
+const gradeTone = g => (g==="A+"||g==="A")?"green":(g==="B+"||g==="B")?"blue":g==="C"?"amber":"red";
+
+function seedStudents(){
+  const out=[]; let n=0;
+  const fixed=[["Aarav","Sharma","10-A","001"],["Saanvi","Patel","9-B","014"],["Rohan","Verma","8-A","028"],["Kavya","Singh","10-B","036"],
+               ["Aditya","Kumar","7-A","001"],["Ananya","Singh","7-A","002"],["Dev","Patel","7-A","003"],["Isha","Verma","7-A","004"],["Kabir","Khan","7-A","005"]];
+  fixed.forEach((f,i)=>out.push({id:"s"+(++n),first:f[0],last:f[1],cls:f[2],roll:f[3],phone:"98765432"+(10+i),status:"Active",color:AV[i%AV.length]}));
+  CLASSES.forEach(c=>{
+    const have=out.filter(s=>s.cls===c).length;
+    const need=(c==="7-A"?4:9);
+    for(let k=0;k<need;k++){
+      const f=FIRST[(n*3+k)%FIRST.length], l=LAST[(n+k*2)%LAST.length];
+      out.push({id:"s"+(++n),first:f,last:l,cls:c,roll:String(have+k+1).padStart(3,"0"),
+        phone:"9"+String(800000000+n*13717).slice(0,9),status:(n%17===0?"Inactive":"Active"),color:AV[n%AV.length]});
+    }
+  });
+  return out;
+}
+const TEACHERS=[
+  {id:"t1",name:"Prem Tandan",subject:"Mathematics",cls:"10-A",phone:"9876500001",email:"prem@edusphere.in"},
+  {id:"t2",name:"Anita Rao",subject:"Science",cls:"9-B",phone:"9876500002",email:"anita@edusphere.in"},
+  {id:"t3",name:"Sunil Mehta",subject:"English",cls:"8-A",phone:"9876500003",email:"sunil@edusphere.in"},
+  {id:"t4",name:"Farah Khan",subject:"Social Science",cls:"7-A",phone:"9876500004",email:"farah@edusphere.in"},
+  {id:"t5",name:"Rahul Nair",subject:"Hindi",cls:"6-A",phone:"9876500005",email:"rahul@edusphere.in"},
+  {id:"t6",name:"Divya Joshi",subject:"Mathematics",cls:"10-B",phone:"9876500006",email:"divya@edusphere.in"}
+];
+const EVENTS=[
+  {id:"e1",date:"2026-09-25",title:"Unit Test — Science",note:"Classes 6 to 8",tone:"red"},
+  {id:"e2",date:"2026-09-28",title:"Parent-teacher meeting",note:"10:00 AM – 1:00 PM",tone:"blue"},
+  {id:"e3",date:"2026-10-02",title:"Gandhi Jayanti",note:"School closed",tone:"amber"},
+  {id:"e4",date:"2026-10-10",title:"Term 1 results",note:"Report cards go home",tone:"green"}
+];
+const EXAMS=[
+  {id:"x1",name:"Unit Test 1",subject:"Mathematics",cls:"10-A",date:"2026-09-25",max:20,room:"Hall A"},
+  {id:"x2",name:"Unit Test 1",subject:"Science",cls:"9-B",date:"2026-09-26",max:20,room:"Lab 2"},
+  {id:"x3",name:"Term 1",subject:"English",cls:"8-A",date:"2026-10-05",max:60,room:"Hall B"},
+  {id:"x4",name:"Term 1",subject:"Mathematics",cls:"10-A",date:"2026-10-06",max:60,room:"Hall A"}
+];
+function seedAttendance(students){
+  const att={};
+  for(let i=1;i<=12;i++){
+    const d=addDays(new Date(),-i);
+    if(d.getDay()===0) continue;
+    const key=iso(d); att[key]={};
+    students.forEach((s,idx)=>{
+      const r=(idx*7+i*13)%100;
+      att[key][s.id]= r<6?"absent" : r<10?"leave" : "present";
+    });
+  }
+  return att;
+}
+function seedGrades(students){
+  const g={};
+  students.forEach((s,idx)=>{
+    SUBJECTS.forEach((sub,j)=>{
+      const base=48+((idx*11+j*17)%48);
+      g[s.id+"|"+sub]={ut1:Math.min(20,Math.round(base*0.2)),ut2:Math.min(20,Math.round(base*0.19)+1),term:Math.min(60,Math.round(base*0.58))};
+    });
+  });
+  return g;
+}
+function freshData(){
+  const students=seedStudents();
+  return {school:"EduSphere Public School",user:{name:"Prem Tandan",role:"Teacher"},
+    students, teachers:TEACHERS, events:EVENTS, exams:EXAMS,
+    attendance:seedAttendance(students), grades:seedGrades(students)};
+}
+
+const KEY="edusphere:data:v1";
+function load(){ try{const raw=localStorage.getItem(KEY); if(raw) return JSON.parse(raw);}catch(e){} return freshData(); }
+function persist(d){ try{localStorage.setItem(KEY,JSON.stringify(d));}catch(e){} }
+
+function BarChart({rows}){
+  const W=560,H=210,pad=30,bw=13,gap=5;
+  const max=Math.max(10,...rows.map(r=>Math.max(r.present,r.absent,r.leave)));
+  const step=(W-pad-10)/Math.max(1,rows.length);
+  const y=v=>H-24-(v/max)*(H-50);
+  return (
+    <svg viewBox={"0 0 "+W+" "+H} width="100%" height="210" role="img" aria-label="Attendance by day">
+      {[0,25,50,75,100].map(p=>{
+        const v=Math.round(max*p/100);
+        return <g key={p}>
+          <line x1={pad} x2={W-6} y1={y(v)} y2={y(v)} stroke="var(--border)" strokeWidth="1"/>
+          <text x={pad-6} y={y(v)+4} textAnchor="end" fontSize="10" fill="var(--muted)">{v}</text>
+        </g>;
+      })}
+      {rows.map((r,i)=>{
+        const x=pad+i*step+step/2-(bw*3+gap*2)/2;
+        const bars=[["Present",r.present,"var(--green)"],["Absent",r.absent,"var(--red)"],["Leave",r.leave,"var(--primary)"]];
+        return <g key={r.label+i}>
+          {bars.map((b,j)=>(
+            <rect key={b[0]} x={x+j*(bw+gap)} y={y(b[1])} width={bw} height={Math.max(2,H-24-y(b[1]))} rx="3" fill={b[2]}>
+              <title>{r.label+" · "+b[0]+": "+b[1]}</title>
+            </rect>
+          ))}
+          <text x={pad+i*step+step/2} y={H-8} textAnchor="middle" fontSize="11" fill="var(--muted)" fontWeight="600">{r.label}</text>
+        </g>;
+      })}
+    </svg>
+  );
+}
+function LineChart({labels,series}){
+  const W=560,H=210,pad=32;
+  const y=v=>H-26-(v/100)*(H-52);
+  const x=i=>pad+i*((W-pad-14)/Math.max(1,labels.length-1));
+  return (
+    <svg viewBox={"0 0 "+W+" "+H} width="100%" height="210" role="img" aria-label="Grade performance">
+      {[0,20,40,60,80,100].map(v=>(
+        <g key={v}>
+          <line x1={pad} x2={W-6} y1={y(v)} y2={y(v)} stroke="var(--border)" strokeWidth="1"/>
+          <text x={pad-6} y={y(v)+4} textAnchor="end" fontSize="10" fill="var(--muted)">{v}</text>
+        </g>
+      ))}
+      {series.map(s=>(
+        <g key={s.name}>
+          <polyline fill="none" stroke={s.color} strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round"
+            points={s.data.map((v,i)=>x(i)+","+y(v)).join(" ")}/>
+          {s.data.map((v,i)=><circle key={i} cx={x(i)} cy={y(v)} r="3.6" fill={s.color}><title>{s.name+" "+labels[i]+": "+v}</title></circle>)}
+        </g>
+      ))}
+      {labels.map((l,i)=><text key={l} x={x(i)} y={H-8} textAnchor="middle" fontSize="11" fill="var(--muted)" fontWeight="600">{l}</text>)}
+    </svg>
+  );
+}
+
+const Avatar = ({s,size=34}) => (
+  <span className="avatar" style={{background:s.color||"var(--primary)",width:size,height:size,fontSize:size*0.37}}>{initials(s)}</span>
+);
+function Modal({title,onClose,children}){
+  useEffect(()=>{
+    const h=e=>{ if(e.key==="Escape") onClose(); };
+    window.addEventListener("keydown",h); return ()=>window.removeEventListener("keydown",h);
+  },[onClose]);
+  return (
+    <div className="mask" onMouseDown={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div className="modal" role="dialog" aria-modal="true">
+        <div className="card-head"><h3>{title}</h3>
+          <button className="icon-btn" style={{marginLeft:"auto"}} onClick={onClose} aria-label="Close"><I d={ic.close}/></button>
+        </div>
+        {children}
+      </div>
+    </div>
+  );
+}
+
+function App(){
+  const [data,setData]=useState(load);
+  const [page,setPage]=useState("dashboard");
+  const [navOpen,setNavOpen]=useState(false);
+  const [toast,setToast]=useState(null);
+  const [theme,setTheme]=useState(()=>{try{return localStorage.getItem("edusphere:theme")||"auto"}catch(e){return "auto"}});
+  const [query,setQuery]=useState("");
+  const [showNotif,setShowNotif]=useState(false);
+
+  useEffect(()=>persist(data),[data]);
+  useEffect(()=>{
+    const r=document.documentElement;
+    if(theme==="auto") r.removeAttribute("data-theme"); else r.setAttribute("data-theme",theme);
+    try{localStorage.setItem("edusphere:theme",theme);}catch(e){}
+  },[theme]);
+  useEffect(()=>{ if(!toast) return; const t=setTimeout(()=>setToast(null),2200); return ()=>clearTimeout(t); },[toast]);
+
+  const say=m=>setToast(m);
+  const nav=[
+    ["dashboard","Dashboard",ic.dash],["students","Students",ic.students],["attendance","Attendance",ic.attendance],
+    ["grades","Grade book",ic.grade],["classes","Classes",ic.classes],["teachers","Teachers",ic.teachers],
+    ["parents","Parents",ic.parents],["exams","Exams",ic.exams],["reports","Reports",ic.reports],["settings","Settings",ic.settings]
+  ];
+  const go=p=>{setPage(p);setNavOpen(false);setQuery("");setShowNotif(false);window.scrollTo({top:0});};
+
+  const results=useMemo(()=>{
+    const q=query.trim().toLowerCase(); if(q.length<2) return [];
+    const out=[];
+    data.students.forEach(s=>{ if(fullName(s).toLowerCase().includes(q)||s.roll.includes(q)||s.cls.toLowerCase().includes(q))
+      out.push({t:fullName(s),s:"Student · "+s.cls+" · Roll "+s.roll,go:"students"}); });
+    data.teachers.forEach(t=>{ if(t.name.toLowerCase().includes(q)||t.subject.toLowerCase().includes(q))
+      out.push({t:t.name,s:"Teacher · "+t.subject,go:"teachers"}); });
+    CLASSES.forEach(c=>{ if(c.toLowerCase().includes(q)) out.push({t:"Class "+c,s:"Class",go:"classes"}); });
+    return out.slice(0,6);
+  },[query,data]);
+
+  const upcoming=useMemo(()=>[...data.events].sort((a,b)=>a.date<b.date?-1:1).filter(e=>e.date>=today()).slice(0,4),[data.events]);
+
+  const pages={
+    dashboard:<Dashboard data={data} go={go} say={say}/>,
+    students:<Students data={data} setData={setData} say={say}/>,
+    attendance:<Attendance data={data} setData={setData} say={say}/>,
+    grades:<GradeBook data={data} setData={setData} say={say}/>,
+    classes:<Classes data={data} go={go}/>,
+    teachers:<Teachers data={data} setData={setData} say={say}/>,
+    parents:<Parents data={data}/>,
+    exams:<Exams data={data} setData={setData} say={say}/>,
+    reports:<Reports data={data} say={say}/>,
+    settings:<Settings data={data} setData={setData} theme={theme} setTheme={setTheme} say={say}/>
+  };
+
+  return (
+    <div className="app">
+      {navOpen && <div className="scrim" onClick={()=>setNavOpen(false)}/>}
+      <aside className={"sidebar"+(navOpen?" open":"")}>
+        <div className="brand">
+          <span className="brand-mark"><I d={ic.logo} size={19}/></span>
+          <span><span className="brand-name">EduSphere</span><span className="brand-sub">SCHOOL ERP</span></span>
+        </div>
+        <nav className="nav">
+          {nav.map(([k,label,d])=>(
+            <button key={k} className={"nav-item"+(page===k?" active":"")} onClick={()=>go(k)} aria-current={page===k?"page":null}>
+              <I d={d} size={17}/>{label}
+            </button>
+          ))}
+        </nav>
+        <div className="nav-foot">
+          <div className="tagline">A brighter tomorrow, together</div>
+          <div style={{marginTop:6}}>Learn · Manage · Grow</div>
+        </div>
+      </aside>
+
+      <div className="main">
+        <header className="topbar">
+          <button className="icon-btn mobile-only" onClick={()=>setNavOpen(true)} aria-label="Open menu"><I d={ic.menu}/></button>
+          <div className="search">
+            <I d={ic.search} size={16}/>
+            <input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Search students, classes, or anything…" aria-label="Search"/>
+            {results.length>0 && (
+              <div className="search-pop">
+                {results.map((r,i)=>(
+                  <button key={i} className="search-row" onClick={()=>go(r.go)}>
+                    <span style={{fontWeight:700,fontSize:13,display:"block"}}>{r.t}</span>
+                    <span style={{fontSize:11.5,color:"var(--muted)"}}>{r.s}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+          <div style={{position:"relative",marginLeft:"auto"}}>
+            <button className="icon-btn" onClick={()=>setShowNotif(v=>!v)} aria-label="Notifications">
+              <I d={ic.bell}/>{upcoming.length>0 && <span className="badge-dot">{upcoming.length}</span>}
+            </button>
+            {showNotif && (
+              <div className="card" style={{position:"absolute",right:0,top:"calc(100% + 8px)",width:278,zIndex:50}}>
+                <div className="card-head" style={{padding:"12px 15px"}}><span className="card-title" style={{fontSize:14}}>Coming up</span></div>
+                <div className="card-body" style={{padding:"4px 15px 14px"}}>
+                  {upcoming.map(e=>(
+                    <div key={e.id} style={{padding:"8px 0",borderBottom:"1px solid var(--border)"}}>
+                      <div style={{fontWeight:700,fontSize:13}}>{e.title}</div>
+                      <div style={{fontSize:11.5,color:"var(--muted)"}}>{fmtDate(e.date)}</div>
+                    </div>
+                  ))}
+                  <button className="btn ghost sm" style={{marginTop:10,width:"100%",justifyContent:"center"}} onClick={()=>go("exams")}>Open exam schedule</button>
+                </div>
+              </div>
+            )}
+          </div>
+          <button className="icon-btn" onClick={()=>setTheme(t=>t==="dark"?"light":"dark")} aria-label="Switch theme">
+            <I d={theme==="dark"?ic.sun:ic.moon}/>
+          </button>
+          <button className="who" onClick={()=>go("settings")}>
+            <Avatar s={{name:data.user.name,color:"#1d6ff2"}}/>
+            <span className="who-text">
+              <span className="who-name" style={{display:"block"}}>Mr. {data.user.name}</span>
+              <span className="who-role">{data.user.role}</span>
+            </span>
+          </button>
+        </header>
+        <main className="content">{pages[page]}</main>
+      </div>
+      {toast && <div className="toast" role="status">{toast}</div>}
+    </div>
+  );
+}
+
+function Dashboard({data,go,say}){
+  const [range,setRange]=useState("week");
+  const att=data.attendance, td=today();
+  const todays=att[td]||{};
+  const activeStudents=data.students.filter(s=>s.status==="Active");
+  const present=Object.values(todays).filter(v=>v==="present").length;
+  const marked=Object.keys(todays).length;
+  const pct=marked?Math.round(present/marked*100):0;
+
+  const days=useMemo(()=>{
+    const n=range==="week"?7:13, rows=[];
+    for(let i=n-1;i>=0;i--){
+      const d=addDays(new Date(),-i); if(d.getDay()===0) continue;
+      const k=iso(d), vals=Object.values(att[k]||{});
+      rows.push({label:DAY[d.getDay()]+(range==="week"?"":" "+d.getDate()),
+        present:vals.filter(v=>v==="present").length,
+        absent:vals.filter(v=>v==="absent").length,
+        leave:vals.filter(v=>v==="leave").length});
+    }
+    return rows.slice(-6);
+  },[att,range]);
+
+  const perf=useMemo(()=>{
+    const totals=data.students.map(s=>{
+      const g=data.grades[s.id+"|Mathematics"]||{ut1:0,ut2:0,term:0};
+      return (g.ut1||0)+(g.ut2||0)+(g.term||0);
+    });
+    const avg=Math.round(totals.reduce((a,b)=>a+b,0)/Math.max(1,totals.length));
+    const pass=Math.round(totals.filter(t=>t>=40).length/Math.max(1,totals.length)*100);
+    const labels=["Apr","May","Jun","Jul","Aug","Sep"];
+    return {labels,series:[
+      {name:"Avg. score",color:"var(--primary)",data:labels.map((_,i)=>Math.max(5,Math.min(100,avg-9+i*2)))},
+      {name:"Pass %",color:"var(--green)",data:labels.map((_,i)=>Math.max(5,Math.min(100,Math.round(pass-8+i*1.6))))}
+    ]};
+  },[data]);
+
+  const recent=data.students.slice(0,5);
+  const byClass=CLASSES.map(c=>{
+    const ids=data.students.filter(s=>s.cls===c&&s.status==="Active").map(s=>s.id);
+    const p=ids.filter(id=>todays[id]==="present").length;
+    const a=ids.filter(id=>todays[id]==="absent").length;
+    const m=ids.filter(id=>todays[id]).length;
+    return {c,p,a,pct:m?Math.round(p/m*100):null};
+  });
+  const upcoming=[...data.events].sort((a,b)=>a.date<b.date?-1:1).slice(0,4);
+
+  const stats=[
+    {label:"Total students",value:activeStudents.length,note:"+12% this term",tone:"var(--primary)",soft:"var(--primary-soft)",icon:ic.students,noteTone:"var(--green)"},
+    {label:"Present today",value:present,note:marked?pct+"% attendance":"Not marked yet",tone:"var(--green)",soft:"var(--green-soft)",icon:ic.attendance,noteTone:"var(--muted)"},
+    {label:"Total teachers",value:data.teachers.length,note:"Across "+SUBJECTS.length+" subjects",tone:"var(--amber)",soft:"var(--amber-soft)",icon:ic.teachers,noteTone:"var(--muted)"},
+    {label:"Active classes",value:CLASSES.length,note:"Grades 6 to 10",tone:"var(--purple)",soft:"var(--purple-soft)",icon:ic.classes,noteTone:"var(--muted)"}
+  ];
+
+  return (
+    <React.Fragment>
+      <div className="hello">
+        <div>
+          <h1>Welcome back, Mr. {data.user.name.split(" ")[0]}!</h1>
+          <p>Here's what's happening at your school today.</p>
+        </div>
+        <div>
+          <span className="date-pill">{fmtDate(td)}</span>
+          <div className="quote">“Education is the most powerful weapon which you can use to change the world.” — Nelson Mandela</div>
+        </div>
+      </div>
+
+      <div className="stats">
+        {stats.map(s=>(
+          <div className="card stat" key={s.label}>
+            <span className="stat-ico" style={{background:s.soft,color:s.tone}}><I d={s.icon} size={21}/></span>
+            <div>
+              <div className="stat-label">{s.label}</div>
+              <div className="stat-value">{s.value}</div>
+              <div className="stat-note" style={{color:s.noteTone}}>{s.note}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <div className="grid-dash">
+        <div className="card">
+          <div className="card-head">
+            <span className="card-title">Attendance overview</span>
+            <select className="mini" style={{marginLeft:"auto"}} value={range} onChange={e=>setRange(e.target.value)}>
+              <option value="week">This week</option><option value="fortnight">Last 2 weeks</option>
+            </select>
+          </div>
+          <div className="card-body">
+            <div className="legend">
+              <span><i style={{background:"var(--green)"}}/>Present</span>
+              <span><i style={{background:"var(--red)"}}/>Absent</span>
+              <span><i style={{background:"var(--primary)"}}/>Leave</span>
+            </div>
+            <BarChart rows={days}/>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-head">
+            <span className="card-title">Grade performance</span>
+            <span className="mini" style={{marginLeft:"auto"}}>Mathematics · Term 1</span>
+          </div>
+          <div className="card-body">
+            <div className="legend">
+              <span><i style={{background:"var(--primary)"}}/>Avg. score</span>
+              <span><i style={{background:"var(--green)"}}/>Pass %</span>
+            </div>
+            <LineChart labels={perf.labels} series={perf.series}/>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-head"><span className="card-title">Quick actions</span></div>
+          <div className="card-body" style={{display:"flex",flexDirection:"column",gap:9}}>
+            <button className="quick" onClick={()=>go("students")}><span className="qi" style={{background:"var(--primary-soft)",color:"var(--primary)"}}><I d={ic.plus} size={17}/></span>Add a new student</button>
+            <button className="quick" onClick={()=>go("attendance")}><span className="qi" style={{background:"var(--green-soft)",color:"var(--green)"}}><I d={ic.check} size={17}/></span>Mark attendance</button>
+            <button className="quick" onClick={()=>go("grades")}><span className="qi" style={{background:"var(--purple-soft)",color:"var(--purple)"}}><I d={ic.grade} size={17}/></span>Enter grades</button>
+            <button className="quick" onClick={()=>go("reports")}><span className="qi" style={{background:"var(--amber-soft)",color:"var(--amber)"}}><I d={ic.reports} size={17}/></span>Generate a report</button>
+            <button className="quick" onClick={()=>{say("Exam schedule opened");go("exams");}}><span className="qi" style={{background:"var(--red-soft)",color:"var(--red)"}}><I d={ic.exams} size={17}/></span>Schedule an exam</button>
+          </div>
+        </div>
+      </div>
+
+      <div className="grid-dash-b">
+        <div className="card">
+          <div className="card-head"><span className="card-title">Recent students</span>
+            <button className="link" onClick={()=>go("students")}>View all</button></div>
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Name</th><th>Class</th><th>Roll no.</th><th>Status</th></tr></thead>
+              <tbody>{recent.map(s=>(
+                <tr key={s.id}>
+                  <td><span style={{display:"flex",alignItems:"center",gap:9}}><Avatar s={s} size={28}/><b>{fullName(s)}</b></span></td>
+                  <td>{s.cls}</td><td>{s.roll}</td>
+                  <td><span className={"pill "+(s.status==="Active"?"green":"amber")}>{s.status}</span></td>
+                </tr>))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-head"><span className="card-title">Today's attendance</span>
+            <button className="link" onClick={()=>go("attendance")}>View all</button></div>
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Class</th><th>Present</th><th>Absent</th><th>Attendance</th></tr></thead>
+              <tbody>{byClass.map(r=>(
+                <tr key={r.c}>
+                  <td><b>{r.c}</b></td><td>{r.p}</td><td>{r.a}</td>
+                  <td>{r.pct===null? <span className="pill blue">Not marked</span>
+                    : <span className={"pill "+(r.pct>=95?"green":r.pct>=90?"blue":"amber")}>{r.pct}%</span>}</td>
+                </tr>))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div className="card">
+          <div className="card-head"><span className="card-title">Upcoming events</span>
+            <button className="link" onClick={()=>go("exams")}>View all</button></div>
+          <div className="card-body" style={{paddingTop:4}}>
+            {upcoming.map(e=>{
+              const d=new Date(e.date+"T00:00:00");
+              const soft={red:"var(--red-soft)",blue:"var(--primary-soft)",amber:"var(--amber-soft)",green:"var(--green-soft)"}[e.tone];
+              const col={red:"var(--red)",blue:"var(--primary)",amber:"var(--amber)",green:"var(--green)"}[e.tone];
+              return (
+                <div className="event" key={e.id}>
+                  <div className="d" style={{background:soft,color:col}}>
+                    <small>{MON[d.getMonth()].toUpperCase()}</small>{d.getDate()}
+                  </div>
+                  <div><div className="t">{e.title}</div><div className="s">{e.note}</div></div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+
+const blankStudent={first:"",last:"",cls:"10-A",roll:"",phone:"",status:"Active"};
+function Students({data,setData,say}){
+  const [q,setQ]=useState(""), [cls,setCls]=useState("all"), [status,setStatus]=useState("all");
+  const [editing,setEditing]=useState(null), [form,setForm]=useState(blankStudent), [confirm,setConfirm]=useState(null);
+
+  const list=data.students.filter(s=>{
+    const t=(fullName(s)+" "+s.roll+" "+s.cls+" "+s.phone).toLowerCase();
+    return t.includes(q.toLowerCase()) && (cls==="all"||s.cls===cls) && (status==="all"||s.status===status);
+  });
+  const open=s=>{ setEditing(s||"new"); setForm(s?{...s}:{...blankStudent}); };
+  const save=()=>{
+    if(!form.first.trim()||!form.last.trim()){ say("Add a first and last name to save"); return; }
+    if(!form.roll.trim()){ say("A roll number is needed to save"); return; }
+    setData(d=>{
+      if(editing==="new"){
+        const s={...form,id:"s"+Date.now(),color:AV[d.students.length%AV.length]};
+        return {...d,students:[s,...d.students]};
+      }
+      return {...d,students:d.students.map(s=>s.id===form.id?{...s,...form}:s)};
+    });
+    say(editing==="new"?"Student added":"Student updated");
+    setEditing(null);
+  };
+  const remove=s=>{ setData(d=>({...d,students:d.students.filter(x=>x.id!==s.id)})); setConfirm(null); say("Student removed"); };
+
+  return (
+    <React.Fragment>
+      <div className="page-head">
+        <div><h2>Students</h2><div className="sub">{list.length} of {data.students.length} students shown</div></div>
+        <button className="btn" style={{marginLeft:"auto"}} onClick={()=>open(null)}><I d={ic.plus} size={16}/>Add student</button>
+      </div>
+
+      <div className="card">
+        <div className="toolbar">
+          <input className="mini" style={{flex:1,minWidth:180}} placeholder="Search by name, roll no. or phone" value={q} onChange={e=>setQ(e.target.value)}/>
+          <select className="mini" value={cls} onChange={e=>setCls(e.target.value)}>
+            <option value="all">All classes</option>{CLASSES.map(c=><option key={c} value={c}>{c}</option>)}
+          </select>
+          <select className="mini" value={status} onChange={e=>setStatus(e.target.value)}>
+            <option value="all">Any status</option><option value="Active">Active</option><option value="Inactive">Inactive</option>
+          </select>
+        </div>
+        {list.length===0 ? (
+          <div className="empty"><b>No students match this search</b>Clear the filters, or add a student to get started.</div>
+        ) : (
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>#</th><th>Name</th><th>Class</th><th>Roll no.</th><th>Parent contact</th><th>Status</th><th>Actions</th></tr></thead>
+              <tbody>
+                {list.map((s,i)=>(
+                  <tr key={s.id}>
+                    <td style={{color:"var(--muted)"}}>{i+1}</td>
+                    <td><span style={{display:"flex",alignItems:"center",gap:9}}><Avatar s={s} size={30}/><b>{fullName(s)}</b></span></td>
+                    <td>{s.cls}</td><td>{s.roll}</td><td>{s.phone}</td>
+                    <td><span className={"pill "+(s.status==="Active"?"green":"amber")}>{s.status}</span></td>
+                    <td>
+                      <button className="row-act" onClick={()=>open(s)} aria-label={"Edit "+fullName(s)}><I d={ic.edit} size={15}/></button>
+                      <button className="row-act del" onClick={()=>setConfirm(s)} aria-label={"Remove "+fullName(s)}><I d={ic.trash} size={15}/></button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {editing && (
+        <Modal title={editing==="new"?"Add student":"Edit student"} onClose={()=>setEditing(null)}>
+          <div className="card-body">
+            <div className="form-grid">
+              <div className="field"><label>First name</label><input value={form.first} onChange={e=>setForm({...form,first:e.target.value})} autoFocus/></div>
+              <div className="field"><label>Last name</label><input value={form.last} onChange={e=>setForm({...form,last:e.target.value})}/></div>
+              <div className="field"><label>Class</label><select value={form.cls} onChange={e=>setForm({...form,cls:e.target.value})}>{CLASSES.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+              <div className="field"><label>Roll number</label><input value={form.roll} onChange={e=>setForm({...form,roll:e.target.value})}/></div>
+              <div className="field"><label>Parent contact</label><input value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})}/></div>
+              <div className="field"><label>Status</label><select value={form.status} onChange={e=>setForm({...form,status:e.target.value})}><option value="Active">Active</option><option value="Inactive">Inactive</option></select></div>
+            </div>
+          </div>
+          <div className="card-body" style={{borderTop:"1px solid var(--border)",display:"flex",gap:9,justifyContent:"flex-end"}}>
+            <button className="btn ghost" onClick={()=>setEditing(null)}>Cancel</button>
+            <button className="btn" onClick={save}><I d={ic.save} size={15}/>{editing==="new"?"Add student":"Save changes"}</button>
+          </div>
+        </Modal>
+      )}
+
+      {confirm && (
+        <Modal title="Remove student" onClose={()=>setConfirm(null)}>
+          <div className="card-body">Removing <b>{fullName(confirm)}</b> takes their attendance and grade records with them. This can't be undone.</div>
+          <div className="card-body" style={{borderTop:"1px solid var(--border)",display:"flex",gap:9,justifyContent:"flex-end"}}>
+            <button className="btn ghost" onClick={()=>setConfirm(null)}>Keep student</button>
+            <button className="btn danger" onClick={()=>remove(confirm)}>Remove</button>
+          </div>
+        </Modal>
+      )}
+    </React.Fragment>
+  );
+}
+
+function Attendance({data,setData,say}){
+  const [date,setDate]=useState(today());
+  const [cls,setCls]=useState("7-A");
+  const roster=data.students.filter(s=>s.cls===cls&&s.status==="Active");
+  const saved=data.attendance[date]||{};
+  const [draft,setDraft]=useState({});
+  useEffect(()=>{
+    const d={};
+    data.students.filter(s=>s.cls===cls&&s.status==="Active").forEach(s=>{ d[s.id]=(data.attendance[date]||{})[s.id]||"present"; });
+    setDraft(d);
+  },[date,cls,data.students.length]);
+
+  const set=(id,v)=>setDraft(d=>({...d,[id]:v}));
+  const all=v=>{ const d={}; roster.forEach(s=>{d[s.id]=v;}); setDraft(d); };
+  const save=()=>{
+    setData(d=>({...d,attendance:{...d.attendance,[date]:{...(d.attendance[date]||{}),...draft}}}));
+    say("Attendance saved for "+cls);
+  };
+  const counts=["present","absent","leave"].map(v=>Object.values(draft).filter(x=>x===v).length);
+  const pct=roster.length?Math.round(counts[0]/roster.length*100):0;
+
+  return (
+    <React.Fragment>
+      <div className="page-head">
+        <div><h2>Attendance</h2><div className="sub">{fmtDate(date)} · Class {cls}</div></div>
+        <button className="btn green" style={{marginLeft:"auto"}} onClick={save}><I d={ic.save} size={15}/>Save attendance</button>
+      </div>
+
+      <div className="stats">
+        <div className="card stat"><span className="stat-ico" style={{background:"var(--green-soft)",color:"var(--green)"}}><I d={ic.check} size={21}/></span>
+          <div><div className="stat-label">Present</div><div className="stat-value">{counts[0]}</div></div></div>
+        <div className="card stat"><span className="stat-ico" style={{background:"var(--red-soft)",color:"var(--red)"}}><I d={ic.close} size={21}/></span>
+          <div><div className="stat-label">Absent</div><div className="stat-value">{counts[1]}</div></div></div>
+        <div className="card stat"><span className="stat-ico" style={{background:"var(--amber-soft)",color:"var(--amber)"}}><I d={ic.attendance} size={21}/></span>
+          <div><div className="stat-label">On leave</div><div className="stat-value">{counts[2]}</div></div></div>
+        <div className="card stat"><span className="stat-ico" style={{background:"var(--primary-soft)",color:"var(--primary)"}}><I d={ic.up} size={21}/></span>
+          <div><div className="stat-label">Class attendance</div><div className="stat-value">{pct}%</div></div></div>
+      </div>
+
+      <div className="card">
+        <div className="toolbar">
+          <input className="mini" type="date" value={date} onChange={e=>setDate(e.target.value)}/>
+          <select className="mini" value={cls} onChange={e=>setCls(e.target.value)}>
+            {CLASSES.map(c=><option key={c} value={c}>Class {c}</option>)}
+          </select>
+          <span style={{marginLeft:"auto",display:"flex",gap:8}}>
+            <button className="btn ghost sm" onClick={()=>all("present")}>Mark all present</button>
+            <button className="btn ghost sm" onClick={()=>all("absent")}>Mark all absent</button>
+          </span>
+        </div>
+        {roster.length===0 ? <div className="empty"><b>No active students in {cls}</b>Add students to this class first.</div> : (
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Student name</th><th>Roll no.</th><th>Status</th><th>Last saved</th></tr></thead>
+            <tbody>
+              {roster.map((s,i)=>(
+                <tr key={s.id}>
+                  <td style={{color:"var(--muted)"}}>{i+1}</td>
+                  <td><span style={{display:"flex",alignItems:"center",gap:9}}><Avatar s={s} size={28}/><b>{fullName(s)}</b></span></td>
+                  <td>{s.roll}</td>
+                  <td>
+                    <span className="seg">
+                      {["present","absent","leave"].map(v=>(
+                        <button key={v} data-v={v} className={draft[s.id]===v?"on":""} onClick={()=>set(s.id,v)}>
+                          {v[0].toUpperCase()+v.slice(1)}
+                        </button>
+                      ))}
+                    </span>
+                  </td>
+                  <td>{saved[s.id] ? <span className={"pill "+(saved[s.id]==="present"?"green":saved[s.id]==="absent"?"red":"amber")}>{saved[s.id]}</span> : <span style={{color:"var(--muted)"}}>—</span>}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>)}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function GradeBook({data,setData,say}){
+  const [cls,setCls]=useState("10-A"), [subject,setSubject]=useState("Mathematics");
+  const roster=data.students.filter(s=>s.cls===cls&&s.status==="Active");
+  const [draft,setDraft]=useState({});
+  useEffect(()=>{
+    const d={};
+    data.students.filter(s=>s.cls===cls&&s.status==="Active").forEach(s=>{
+      d[s.id]={...(data.grades[s.id+"|"+subject]||{ut1:0,ut2:0,term:0})};
+    });
+    setDraft(d);
+  },[cls,subject,data.students.length]);
+
+  const set=(id,k,v)=>{
+    const max={ut1:20,ut2:20,term:60}[k];
+    const n=Math.max(0,Math.min(max,parseInt(v||0,10)||0));
+    setDraft(d=>({...d,[id]:{...d[id],[k]:n}}));
+  };
+  const save=()=>{
+    setData(d=>{
+      const g={...d.grades};
+      Object.keys(draft).forEach(id=>{ g[id+"|"+subject]=draft[id]; });
+      return {...d,grades:g};
+    });
+    say("Grades saved for "+cls+" · "+subject);
+  };
+  const totals=roster.map(s=>{const g=draft[s.id]||{};return (g.ut1||0)+(g.ut2||0)+(g.term||0);});
+  const avg=totals.length?Math.round(totals.reduce((a,b)=>a+b,0)/totals.length):0;
+  const pass=totals.filter(t=>t>=40).length;
+
+  return (
+    <React.Fragment>
+      <div className="page-head">
+        <div><h2>Grade book</h2><div className="sub">Class {cls} · {subject} · class average {avg}/100 · {pass} of {totals.length} passing</div></div>
+        <button className="btn" style={{marginLeft:"auto"}} onClick={save}><I d={ic.save} size={15}/>Save grades</button>
+      </div>
+
+      <div className="card">
+        <div className="toolbar">
+          <select className="mini" value={cls} onChange={e=>setCls(e.target.value)}>{CLASSES.map(c=><option key={c} value={c}>Class {c}</option>)}</select>
+          <select className="mini" value={subject} onChange={e=>setSubject(e.target.value)}>{SUBJECTS.map(s=><option key={s} value={s}>{s}</option>)}</select>
+          <span style={{marginLeft:"auto",color:"var(--muted)",fontSize:12.5,fontWeight:600}}>Unit tests out of 20 · Term out of 60</span>
+        </div>
+        {roster.length===0 ? <div className="empty"><b>No students in {cls}</b>Add students to this class to record marks.</div> : (
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>#</th><th>Student name</th><th>UT-1 (20)</th><th>UT-2 (20)</th><th>Term (60)</th><th>Total (100)</th><th>Grade</th></tr></thead>
+            <tbody>
+              {roster.map((s,i)=>{
+                const g=draft[s.id]||{ut1:0,ut2:0,term:0};
+                const total=(g.ut1||0)+(g.ut2||0)+(g.term||0);
+                const gr=gradeOf(total);
+                return (
+                  <tr key={s.id}>
+                    <td style={{color:"var(--muted)"}}>{i+1}</td>
+                    <td><span style={{display:"flex",alignItems:"center",gap:9}}><Avatar s={s} size={28}/><b>{fullName(s)}</b></span></td>
+                    {["ut1","ut2","term"].map(k=>(
+                      <td key={k}><input className="mini" style={{width:68}} type="number" value={g[k]} onChange={e=>set(s.id,k,e.target.value)} aria-label={fullName(s)+" "+k}/></td>
+                    ))}
+                    <td><b>{total}</b></td>
+                    <td><span className={"pill "+gradeTone(gr)}>{gr}</span></td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>)}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function Classes({data,go}){
+  const td=data.attendance[today()]||{};
+  return (
+    <React.Fragment>
+      <div className="page-head"><div><h2>Classes</h2><div className="sub">{CLASSES.length} classes running this session</div></div></div>
+      <div className="tiles">
+        {CLASSES.map(c=>{
+          const roster=data.students.filter(s=>s.cls===c);
+          const active=roster.filter(s=>s.status==="Active").length;
+          const teacher=data.teachers.find(t=>t.cls===c);
+          const marked=roster.filter(s=>td[s.id]).length;
+          const present=roster.filter(s=>td[s.id]==="present").length;
+          const pct=marked?Math.round(present/marked*100):0;
+          return (
+            <div className="tile" key={c}>
+              <h4>Class {c}</h4>
+              <div style={{color:"var(--muted)",fontSize:12.5}}>Class teacher: {teacher?teacher.name:"not assigned"}</div>
+              <div style={{display:"flex",gap:16,marginTop:12}}>
+                <div><div className="stat-label">Students</div><div style={{fontWeight:800,fontSize:19}}>{active}</div></div>
+                <div><div className="stat-label">Today</div><div style={{fontWeight:800,fontSize:19}}>{marked?pct+"%":"—"}</div></div>
+              </div>
+              <div className="bar-track"><div className="bar-fill" style={{width:(marked?pct:0)+"%"}}/></div>
+              <button className="btn ghost sm" style={{marginTop:12,width:"100%",justifyContent:"center"}} onClick={()=>go("attendance")}>Mark attendance</button>
+            </div>
+          );
+        })}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function Teachers({data,setData,say}){
+  const [open,setOpen]=useState(false);
+  const [form,setForm]=useState({name:"",subject:SUBJECTS[0],cls:CLASSES[0],phone:"",email:""});
+  const add=()=>{
+    if(!form.name.trim()){ say("Add a name to save this teacher"); return; }
+    setData(d=>({...d,teachers:[{...form,id:"t"+Date.now()},...d.teachers]}));
+    setOpen(false); setForm({name:"",subject:SUBJECTS[0],cls:CLASSES[0],phone:"",email:""}); say("Teacher added");
+  };
+  const remove=id=>{ setData(d=>({...d,teachers:d.teachers.filter(t=>t.id!==id)})); say("Teacher removed"); };
+  return (
+    <React.Fragment>
+      <div className="page-head">
+        <div><h2>Teachers</h2><div className="sub">{data.teachers.length} teaching staff</div></div>
+        <button className="btn" style={{marginLeft:"auto"}} onClick={()=>setOpen(true)}><I d={ic.plus} size={16}/>Add teacher</button>
+      </div>
+      <div className="card">
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>Name</th><th>Subject</th><th>Class teacher of</th><th>Phone</th><th>Email</th><th></th></tr></thead>
+            <tbody>
+              {data.teachers.map(t=>(
+                <tr key={t.id}>
+                  <td><span style={{display:"flex",alignItems:"center",gap:9}}><Avatar s={{name:t.name,color:AV[t.name.length%AV.length]}} size={30}/><b>{t.name}</b></span></td>
+                  <td><span className="pill blue">{t.subject}</span></td><td>{t.cls}</td><td>{t.phone}</td><td>{t.email}</td>
+                  <td><button className="row-act del" onClick={()=>remove(t.id)} aria-label={"Remove "+t.name}><I d={ic.trash} size={15}/></button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      {open && (
+        <Modal title="Add teacher" onClose={()=>setOpen(false)}>
+          <div className="card-body"><div className="form-grid">
+            <div className="field"><label>Full name</label><input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} autoFocus/></div>
+            <div className="field"><label>Subject</label><select value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})}>{SUBJECTS.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
+            <div className="field"><label>Class teacher of</label><select value={form.cls} onChange={e=>setForm({...form,cls:e.target.value})}>{CLASSES.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+            <div className="field"><label>Phone</label><input value={form.phone} onChange={e=>setForm({...form,phone:e.target.value})}/></div>
+            <div className="field"><label>Email</label><input value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/></div>
+          </div></div>
+          <div className="card-body" style={{borderTop:"1px solid var(--border)",display:"flex",gap:9,justifyContent:"flex-end"}}>
+            <button className="btn ghost" onClick={()=>setOpen(false)}>Cancel</button>
+            <button className="btn" onClick={add}>Add teacher</button>
+          </div>
+        </Modal>
+      )}
+    </React.Fragment>
+  );
+}
+
+function Parents({data}){
+  const [q,setQ]=useState("");
+  const rows=data.students.filter(s=>(fullName(s)+" "+s.phone+" "+s.cls).toLowerCase().includes(q.toLowerCase()));
+  return (
+    <React.Fragment>
+      <div className="page-head"><div><h2>Parents</h2><div className="sub">Contact list built from student records</div></div></div>
+      <div className="card">
+        <div className="toolbar">
+          <input className="mini" style={{flex:1,minWidth:180}} placeholder="Search by student, class or phone" value={q} onChange={e=>setQ(e.target.value)}/>
+        </div>
+        {rows.length===0 ? <div className="empty"><b>No contacts match this search</b>Try a student name or a class instead.</div> : (
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>Parent or guardian</th><th>Student</th><th>Class</th><th>Phone</th><th></th></tr></thead>
+            <tbody>
+              {rows.map(s=>(
+                <tr key={s.id}>
+                  <td><b>{s.last} family</b></td><td>{fullName(s)}</td><td>{s.cls}</td><td>{s.phone}</td>
+                  <td><a className="btn ghost sm" href={"tel:"+s.phone}>Call</a></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>)}
+      </div>
+    </React.Fragment>
+  );
+}
+
+function Exams({data,setData,say}){
+  const [open,setOpen]=useState(false);
+  const [form,setForm]=useState({name:"",subject:SUBJECTS[0],cls:CLASSES[0],date:today(),max:20,room:""});
+  const add=()=>{
+    if(!form.name.trim()){ say("Name the exam to schedule it"); return; }
+    setData(d=>({...d,exams:[...d.exams,{...form,id:"x"+Date.now()}]}));
+    setOpen(false); say("Exam scheduled");
+  };
+  const remove=id=>{ setData(d=>({...d,exams:d.exams.filter(x=>x.id!==id)})); say("Exam removed"); };
+  const sorted=[...data.exams].sort((a,b)=>a.date<b.date?-1:1);
+  return (
+    <React.Fragment>
+      <div className="page-head">
+        <div><h2>Exams</h2><div className="sub">{sorted.length} exams on the calendar</div></div>
+        <button className="btn" style={{marginLeft:"auto"}} onClick={()=>setOpen(true)}><I d={ic.plus} size={16}/>Schedule exam</button>
+      </div>
+      <div className="card">
+        {sorted.length===0 ? <div className="empty"><b>Nothing scheduled yet</b>Schedule an exam and it shows up here and on the dashboard.</div> : (
+        <div className="table-wrap">
+          <table>
+            <thead><tr><th>Date</th><th>Exam</th><th>Subject</th><th>Class</th><th>Max marks</th><th>Room</th><th></th></tr></thead>
+            <tbody>
+              {sorted.map(x=>(
+                <tr key={x.id}>
+                  <td><b>{fmtDate(x.date)}</b></td><td>{x.name}</td>
+                  <td><span className="pill purple">{x.subject}</span></td><td>{x.cls}</td><td>{x.max}</td><td>{x.room||"—"}</td>
+                  <td><button className="row-act del" onClick={()=>remove(x.id)} aria-label="Remove exam"><I d={ic.trash} size={15}/></button></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>)}
+      </div>
+      {open && (
+        <Modal title="Schedule exam" onClose={()=>setOpen(false)}>
+          <div className="card-body"><div className="form-grid">
+            <div className="field"><label>Exam name</label><input value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Unit Test 2" autoFocus/></div>
+            <div className="field"><label>Subject</label><select value={form.subject} onChange={e=>setForm({...form,subject:e.target.value})}>{SUBJECTS.map(s=><option key={s} value={s}>{s}</option>)}</select></div>
+            <div className="field"><label>Class</label><select value={form.cls} onChange={e=>setForm({...form,cls:e.target.value})}>{CLASSES.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+            <div className="field"><label>Date</label><input type="date" value={form.date} onChange={e=>setForm({...form,date:e.target.value})}/></div>
+            <div className="field"><label>Max marks</label><input type="number" value={form.max} onChange={e=>setForm({...form,max:e.target.value})}/></div>
+            <div className="field"><label>Room</label><input value={form.room} onChange={e=>setForm({...form,room:e.target.value})} placeholder="Hall A"/></div>
+          </div></div>
+          <div className="card-body" style={{borderTop:"1px solid var(--border)",display:"flex",gap:9,justifyContent:"flex-end"}}>
+            <button className="btn ghost" onClick={()=>setOpen(false)}>Cancel</button>
+            <button className="btn" onClick={add}>Schedule exam</button>
+          </div>
+        </Modal>
+      )}
+    </React.Fragment>
+  );
+}
+
+function Reports({data,say}){
+  const [subject,setSubject]=useState("Mathematics");
+  const dates=Object.keys(data.attendance);
+  const classRows=CLASSES.map(c=>{
+    const ids=data.students.filter(s=>s.cls===c).map(s=>s.id);
+    let p=0,t=0;
+    dates.forEach(d=>ids.forEach(id=>{ const v=data.attendance[d][id]; if(v){t++; if(v==="present")p++;} }));
+    const totals=ids.map(id=>{const g=data.grades[id+"|"+subject]||{};return (g.ut1||0)+(g.ut2||0)+(g.term||0);});
+    const avg=totals.length?Math.round(totals.reduce((a,b)=>a+b,0)/totals.length):0;
+    return {c,students:ids.length,att:t?Math.round(p/t*100):0,avg,
+      pass:totals.length?Math.round(totals.filter(x=>x>=40).length/totals.length*100):0};
+  });
+  const dist=["A+","A","B+","B","C","D","F"].map(g=>({
+    g, n:data.students.filter(s=>{const x=data.grades[s.id+"|"+subject]||{};return gradeOf((x.ut1||0)+(x.ut2||0)+(x.term||0))===g;}).length
+  }));
+  const maxN=Math.max(1,...dist.map(d=>d.n));
+  const fill=g=>{const t=gradeTone(g);return t==="green"?"var(--green)":t==="blue"?"var(--primary)":t==="amber"?"var(--amber)":"var(--red)";};
+  return (
+    <React.Fragment>
+      <div className="page-head">
+        <div><h2>Reports</h2><div className="sub">Attendance and results across {CLASSES.length} classes</div></div>
+        <span style={{marginLeft:"auto",display:"flex",gap:9}} className="no-print">
+          <select className="mini" value={subject} onChange={e=>setSubject(e.target.value)}>{SUBJECTS.map(s=><option key={s} value={s}>{s}</option>)}</select>
+          <button className="btn ghost" onClick={()=>{say("Opening print view");setTimeout(()=>window.print(),300);}}><I d={ic.print} size={15}/>Print report</button>
+        </span>
+      </div>
+      <div className="grid-2">
+        <div className="card">
+          <div className="card-head"><span className="card-title">Class summary — {subject}</span></div>
+          <div className="table-wrap">
+            <table>
+              <thead><tr><th>Class</th><th>Students</th><th>Attendance</th><th>Avg. score</th><th>Pass rate</th></tr></thead>
+              <tbody>{classRows.map(r=>(
+                <tr key={r.c}>
+                  <td><b>{r.c}</b></td><td>{r.students}</td>
+                  <td><span className={"pill "+(r.att>=92?"green":r.att>=85?"blue":"amber")}>{r.att}%</span></td>
+                  <td>{r.avg}/100</td>
+                  <td><span className={"pill "+(r.pass>=90?"green":r.pass>=75?"blue":"red")}>{r.pass}%</span></td>
+                </tr>))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-head"><span className="card-title">Grade distribution — {subject}</span></div>
+          <div className="card-body" style={{display:"flex",flexDirection:"column",gap:11}}>
+            {dist.map(d=>(
+              <div key={d.g}>
+                <div style={{display:"flex",justifyContent:"space-between",fontSize:12.5,fontWeight:700}}>
+                  <span>Grade {d.g}</span><span style={{color:"var(--muted)"}}>{d.n} students</span>
+                </div>
+                <div className="bar-track"><div className="bar-fill" style={{width:(d.n/maxN*100)+"%",background:fill(d.g)}}/></div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </React.Fragment>
+  );
+}
+
+function Settings({data,setData,theme,setTheme,say}){
+  const [name,setName]=useState(data.user.name);
+  const [school,setSchool]=useState(data.school);
+  const [confirm,setConfirm]=useState(false);
+  return (
+    <React.Fragment>
+      <div className="page-head"><div><h2>Settings</h2><div className="sub">Your profile, appearance, and sample data</div></div></div>
+      <div className="grid-2">
+        <div className="card">
+          <div className="card-head"><span className="card-title">Profile</span></div>
+          <div className="card-body">
+            <div className="form-grid">
+              <div className="field"><label>Your name</label><input value={name} onChange={e=>setName(e.target.value)}/></div>
+              <div className="field"><label>School name</label><input value={school} onChange={e=>setSchool(e.target.value)}/></div>
+            </div>
+            <button className="btn" style={{marginTop:14}} onClick={()=>{setData(d=>({...d,user:{...d.user,name:name},school:school}));say("Profile saved");}}>Save profile</button>
+          </div>
+        </div>
+        <div className="card">
+          <div className="card-head"><span className="card-title">Appearance and data</span></div>
+          <div className="card-body">
+            <div className="field"><label>Theme</label>
+              <select value={theme} onChange={e=>setTheme(e.target.value)}>
+                <option value="auto">Match my device</option><option value="light">Light</option><option value="dark">Dark</option>
+              </select>
+            </div>
+            <p style={{color:"var(--muted)",marginTop:14}}>Everything you enter is stored in this browser only. Clearing site data resets it.</p>
+            <button className="btn danger" onClick={()=>setConfirm(true)}>Reset to sample data</button>
+          </div>
+        </div>
+      </div>
+      {confirm && (
+        <Modal title="Reset to sample data" onClose={()=>setConfirm(false)}>
+          <div className="card-body">This clears every student, grade, and attendance record you've entered and restores the sample school.</div>
+          <div className="card-body" style={{borderTop:"1px solid var(--border)",display:"flex",gap:9,justifyContent:"flex-end"}}>
+            <button className="btn ghost" onClick={()=>setConfirm(false)}>Keep my data</button>
+            <button className="btn danger" onClick={()=>{setData(freshData());setConfirm(false);say("Sample data restored");}}>Reset</button>
+          </div>
+        </Modal>
+      )}
+    </React.Fragment>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App/>);
+</script>
+</body>
+</html>
